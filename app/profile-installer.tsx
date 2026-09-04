@@ -26,6 +26,7 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import { Toaster, toast } from '@/components/ui/toast';
 
 const PROFILE_MIME = 'application/x-apple-aspen-config';
 const MAX_PROFILE_BYTES = 5 * 1024 * 1024;
@@ -274,6 +275,16 @@ export default function Home() {
         ? 'Link copied. Open Safari, paste the link, then continue there.'
         : `Open Safari and enter this address: ${pageUrl}`,
     });
+    toast.add({
+      id: 'safari-handoff',
+      type: copied ? 'success' : 'warning',
+      priority: 'high',
+      timeout: 7000,
+      title: copied ? 'Link copied — open Safari' : 'Open this page in Safari',
+      description: copied
+        ? 'Paste the copied link into Safari to continue installing the profile.'
+        : `Enter ${pageUrl} in Safari to continue.`,
+    });
   }
 
   async function continueOnlyInSafari() {
@@ -396,6 +407,7 @@ export default function Home() {
 
   return (
     <main className="site-shell">
+      <Toaster />
       <header className="site-header">
         <a className="brand" href="#installer" aria-label="ProfileKit home">
           <span className="brand-mark" aria-hidden="true">
