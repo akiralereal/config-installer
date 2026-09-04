@@ -1,5 +1,13 @@
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {};
+const isGitHubPages = process.env.GITHUB_PAGES === 'true';
+
+const nextConfig: NextConfig = isGitHubPages
+  ? {
+      output: 'export',
+      assetPrefix: '/config-installer',
+      trailingSlash: true,
+    }
+  : {};
 
 export default nextConfig;

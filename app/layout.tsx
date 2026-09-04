@@ -12,14 +12,19 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+const isGitHubPages = process.env.GITHUB_PAGES === 'true';
+const siteUrl = isGitHubPages
+  ? 'https://akiralereal.github.io/config-installer/'
+  : 'https://profilekit-installer.akirale.chatgpt.site';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://profilekit-installer.akirale.chatgpt.site'),
+  metadataBase: new URL(siteUrl),
   title: 'ProfileKit — iOS MobileConfig Installer',
   description:
     'Validate and install iOS configuration profiles from a local file, direct URL, or pasted XML.',
   applicationName: 'ProfileKit',
   icons: {
-    icon: '/favicon.svg',
+    icon: `${isGitHubPages ? '/config-installer' : ''}/favicon.svg`,
   },
 };
 
