@@ -1,15 +1,14 @@
 # ProfileKit Installer
 
-A private, browser-only utility for preparing iOS `.mobileconfig` profiles from
-a local file, a direct URL, or pasted XML.
+A browser-only utility for preparing iOS `.mobileconfig` profiles from a local
+file, a direct URL, or pasted XML.
 
 ## Live Site
 
-**[Open ProfileKit Installer](https://profilekit-installer.akirale.chatgpt.site)**
+**[Open ProfileKit Installer](https://akiralereal.github.io/config-installer/)**
 
-The current deployment is owner-only. Sign in with the account that owns the
-site to access it. For profile installation on an iPhone or iPad, open the site
-in Safari.
+The public site is deployed automatically from the `main` branch with GitHub
+Pages. For profile installation on an iPhone or iPad, open the site in Safari.
 
 ## What It Does
 
@@ -49,6 +48,9 @@ npm run dev
 ```
 
 Create a production build with `npm run build`.
+
+Create the static GitHub Pages artifact locally with `npm run build:pages`.
+Pushing to `main` runs the Pages deployment workflow automatically.
 
 ## License
 
