@@ -1,14 +1,13 @@
 # ProfileKit Installer
 
+## 🚀 [Open ProfileKit Installer →](https://akiralereal.github.io/config-installer/)
+
+**Public GitHub Pages site — no installation required.**
+
+> On an iPhone or iPad, open the site in Safari to install a profile.
+
 A browser-only utility for preparing iOS `.mobileconfig` profiles from a local
 file, a direct URL, or pasted XML.
-
-## Live Site
-
-**[Open ProfileKit Installer](https://akiralereal.github.io/config-installer/)**
-
-The public site is deployed automatically from the `main` branch with GitHub
-Pages. For profile installation on an iPhone or iPad, open the site in Safari.
 
 ## What It Does
 
