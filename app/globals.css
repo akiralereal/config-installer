@@ -335,7 +335,7 @@
   margin: -0.5rem 0 1rem;
   padding: 0.72rem 0.85rem;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.55rem;
   border: 1px solid #fed9ad;
   border-radius: 0.8rem;
@@ -344,9 +344,39 @@
   font-size: 0.82rem;
 }
 
-.browser-warning svg {
+.browser-warning > svg {
+  margin-top: 0.15rem;
   width: 1rem;
   height: 1rem;
+  flex: 0 0 auto;
+}
+
+.browser-warning-copy {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 0.12rem;
+}
+
+.browser-warning-copy strong {
+  font-size: 0.82rem;
+}
+
+.browser-warning-copy span {
+  color: #a26522;
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.safari-copy-button {
+  border-color: #e9bd89;
+  color: #874c0e;
+  background: #fffdf8;
+}
+
+.safari-copy-button:hover {
+  color: #6f3c08;
+  background: #ffedcf;
 }
 
 .profile-tabs {
@@ -669,6 +699,15 @@
 
   .step-badge {
     display: none;
+  }
+
+  .browser-warning {
+    flex-wrap: wrap;
+  }
+
+  .safari-copy-button {
+    width: 100%;
+    margin-left: 1.55rem;
   }
 
   .method-tabs [data-slot='tabs-trigger'] {

@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   ClipboardPaste,
   CloudDownload,
+  Copy,
   FileCheck2,
   FileUp,
   Globe2,
@@ -107,6 +108,16 @@ function downloadProfile(content: string, filename: string) {
   window.setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
 }
 
+async function copyText(value: string) {
+  try {
+    if (!navigator.clipboard) return false;
+    await navigator.clipboard.writeText(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function StatusMessage({ status }: { status: Status | null }) {
   if (!status) {
     return (
@@ -134,13 +145,19 @@ export default function Home() {
   const [status, setStatus] = useState<Status | null>(null);
   const [isWorking, setIsWorking] = useState(false);
   const [browserWarning, setBrowserWarning] = useState(false);
+  const [safariLinkCopied, setSafariLinkCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const userAgent = navigator.userAgent;
-    const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+    const isIOS =
+      /iPad|iPhone|iPod/.test(userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const isSafari =
-      /Safari/i.test(userAgent) && !/CriOS|FxiOS|EdgiOS|OPiOS/i.test(userAgent);
+      /Safari/i.test(userAgent) &&
+      !/CriOS|FxiOS|EdgiOS|OPiOS|DuckDuckGo|FBAN|FBAV|Instagram/i.test(
+        userAgent,
+      );
 
     queueMicrotask(() => setBrowserWarning(isIOS && !isSafari));
   }, []);
@@ -246,6 +263,26 @@ export default function Home() {
     setStatus(null);
   }
 
+  async function copyLinkForSafari() {
+    const pageUrl = `${window.location.origin}${window.location.pathname}`;
+    const copied = await copyText(pageUrl);
+
+    setSafariLinkCopied(copied);
+    setStatus({
+      kind: copied ? 'info' : 'error',
+      message: copied
+        ? 'Link copied. Open Safari, paste the link, then continue there.'
+        : `Open Safari and enter this address: ${pageUrl}`,
+    });
+  }
+
+  async function continueOnlyInSafari() {
+    if (!browserWarning) return true;
+
+    await copyLinkForSafari();
+    return false;
+  }
+
   function finishProfile(content: string, filename: string) {
     validateProfile(content);
     downloadProfile(content, filename);
@@ -256,6 +293,8 @@ export default function Home() {
   }
 
   async function installFile() {
+    if (!(await continueOnlyInSafari())) return;
+
     if (!file) {
       setStatus({ kind: 'error', message: 'Choose a .mobileconfig file first.' });
       return;
@@ -285,6 +324,8 @@ export default function Home() {
   }
 
   async function installFromUrl() {
+    if (!(await continueOnlyInSafari())) return;
+
     let parsedUrl: URL;
     try {
       parsedUrl = new URL(profileUrl);
@@ -319,7 +360,9 @@ export default function Home() {
     }
   }
 
-  function installXml() {
+  async function installXml() {
+    if (!(await continueOnlyInSafari())) return;
+
     try {
       finishProfile(xml, 'profilekit-profile.mobileconfig');
     } catch (error) {
@@ -331,7 +374,9 @@ export default function Home() {
     }
   }
 
-  function downloadSample() {
+  async function downloadSample() {
+    if (!(await continueOnlyInSafari())) return;
+
     downloadProfile(SAMPLE_PROFILE, 'profilekit-sample.mobileconfig');
     setStatus({ kind: 'success', message: 'Sample profile downloaded.' });
   }
@@ -417,7 +462,20 @@ export default function Home() {
           {browserWarning && (
             <div className="browser-warning" role="alert">
               <AlertCircle aria-hidden="true" />
-              Open this page in Safari to install profiles on iOS.
+              <div className="browser-warning-copy">
+                <strong>Safari is required for profile installation.</strong>
+                <span>Copy this page, then paste it into Safari.</span>
+              </div>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="safari-copy-button"
+                onClick={copyLinkForSafari}
+              >
+                {safariLinkCopied ? <Check /> : <Copy />}
+                {safariLinkCopied ? 'Copied' : 'Copy link'}
+              </Button>
             </div>
           )}
 
